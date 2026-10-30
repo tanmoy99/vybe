@@ -38,21 +38,32 @@ export function Chat({
   // Realtime: RLS ensures only conversation members receive these rows.
   useEffect(() => {
     const supabase = createClient();
-    const channel = supabase
-      .channel(`conversation:${conversationId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${conversationId}` },
-        (payload) => {
-          const m = payload.new as Message;
-          setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
-          if (m.sender_id !== me) void markReadAction(conversationId);
-        },
-      )
-      .subscribe();
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let cancelled = false;
+
+    (async () => {
+      // Authenticate the socket first; otherwise it subscribes as anon and RLS refuses it.
+      const { data } = await supabase.auth.getSession();
+      if (cancelled || !data.session) return;
+      await supabase.realtime.setAuth(data.session.access_token);
+      channel = supabase
+        .channel(`conversation:${conversationId}`)
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${conversationId}` },
+          (payload) => {
+            const m = payload.new as Message;
+            setMessages((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m]));
+            if (m.sender_id !== me) void markReadAction(conversationId);
+          },
+        )
+        .subscribe();
+    })();
+
     void markReadAction(conversationId);
     return () => {
-      void supabase.removeChannel(channel);
+      cancelled = true;
+      if (channel) void supabase.removeChannel(channel);
     };
   }, [conversationId, me]);
 

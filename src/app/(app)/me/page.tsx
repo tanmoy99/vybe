@@ -19,7 +19,11 @@ export default function MyVybePage() {
   );
 }
 
-const MORE_LINKS = [{ href: "/me/interests", label: "Edit my interests", description: "Add, remove or hide anything in your VYBE DNA." }];
+const MORE_LINKS = [
+  { href: "/me/interests", label: "Edit my interests", description: "Add, remove or hide anything in your VYBE DNA." },
+  { href: "/me/privacy", label: "Privacy controls", description: "Home area, discovery radius, pause and visibility." },
+  { href: "/notifications", label: "Notifications", description: "Requests, matches and messages." },
+];
 
 async function MyVybe() {
   const profile = await requireOnboardedProfile();

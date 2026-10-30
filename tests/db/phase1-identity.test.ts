@@ -35,6 +35,20 @@ describe("sign-up age gate (auth.users trigger)", () => {
     expect(rows[0].meta).toEqual({ marketing: false });
   });
 
+  it("keeps date of birth out of metadata when Auth re-writes it after insert", async () => {
+    // Supabase Auth updates raw_user_meta_data right after the insert with its in-memory copy.
+    const id = await signUp(db, adultMetadata());
+    await db.query("update auth.users set raw_user_meta_data = $2 where id = $1", [
+      id,
+      JSON.stringify({ ...adultMetadata(), email_verified: true }),
+    ]);
+    const { rows } = await db.query<{ meta: Record<string, unknown> }>(
+      "select raw_user_meta_data as meta from auth.users where id = $1",
+      [id],
+    );
+    expect(rows[0].meta).toEqual({ email_verified: true });
+  });
+
   it("rejects someone who turns 18 tomorrow", async () => {
     await expect(signUp(db, adultMetadata({ date_of_birth: isoDateYearsAgo(18, 1) }))).rejects.toThrow(
       /VYBE_UNDER_18/,

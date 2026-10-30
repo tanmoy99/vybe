@@ -4,6 +4,10 @@
 
 Next.js 16 (App Router, Cache Components) · TypeScript · Tailwind v4 · shadcn/ui · Supabase (Auth, Postgres, RLS) · Vercel.
 
+**Live:** https://vybe-dusky-nine.vercel.app (Vercel project `vybe`; Supabase project `vybe`, ref `qldnfzmukmrsupsfojhj`, Sydney). Pushes to `master` deploy to production.
+
+> **Before inviting testers, configure custom SMTP** (Supabase → Authentication → Emails → SMTP; e.g. Resend). Supabase's built-in mailer only delivers to members of your Supabase org and is heavily rate-limited, so real people won't receive confirmation emails until this is set up. Once SMTP is configured, uncomment the template blocks at the end of `supabase/config.toml` and run `npx supabase config push`. The custom templates use cross-device `token_hash` links.
+
 ## Status: Phase 1
 
 | Area | State |

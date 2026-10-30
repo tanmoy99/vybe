@@ -44,6 +44,121 @@ export type Database = {
         }
         Relationships: []
       }
+      interest_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          hue: string
+          id: number
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+          world_name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          hue?: string
+          id?: number
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          world_name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          hue?: string
+          id?: number
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          world_name?: string
+        }
+        Relationships: []
+      }
+      interest_options: {
+        Row: {
+          id: number
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+          subcategory_id: number
+        }
+        Insert: {
+          id?: number
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          subcategory_id: number
+        }
+        Update: {
+          id?: number
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          subcategory_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interest_options_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "interest_subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interest_subcategories: {
+        Row: {
+          category_id: number
+          default_visibility: Database["public"]["Enums"]["interest_visibility"]
+          id: number
+          is_active: boolean
+          kind: Database["public"]["Enums"]["subcategory_kind"]
+          name: string
+          prompt: string | null
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          category_id: number
+          default_visibility?: Database["public"]["Enums"]["interest_visibility"]
+          id?: number
+          is_active?: boolean
+          kind?: Database["public"]["Enums"]["subcategory_kind"]
+          name: string
+          prompt?: string | null
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          category_id?: number
+          default_visibility?: Database["public"]["Enums"]["interest_visibility"]
+          id?: number
+          is_active?: boolean
+          kind?: Database["public"]["Enums"]["subcategory_kind"]
+          name?: string
+          prompt?: string | null
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interest_subcategories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "interest_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       languages: {
         Row: {
           code: string
@@ -181,6 +296,84 @@ export type Database = {
         }
         Relationships: []
       }
+      user_interest_details: {
+        Row: {
+          details: string
+          subcategory_id: number
+          updated_at: string
+          user_id: string
+          visibility: Database["public"]["Enums"]["interest_visibility"]
+        }
+        Insert: {
+          details: string
+          subcategory_id: number
+          updated_at?: string
+          user_id: string
+          visibility?: Database["public"]["Enums"]["interest_visibility"]
+        }
+        Update: {
+          details?: string
+          subcategory_id?: number
+          updated_at?: string
+          user_id?: string
+          visibility?: Database["public"]["Enums"]["interest_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_interest_details_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "interest_subcategories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_interest_details_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_interests: {
+        Row: {
+          created_at: string
+          intensity: number
+          option_id: number
+          user_id: string
+          visibility: Database["public"]["Enums"]["interest_visibility"]
+        }
+        Insert: {
+          created_at?: string
+          intensity?: number
+          option_id: number
+          user_id: string
+          visibility?: Database["public"]["Enums"]["interest_visibility"]
+        }
+        Update: {
+          created_at?: string
+          intensity?: number
+          option_id?: number
+          user_id?: string
+          visibility?: Database["public"]["Enums"]["interest_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_interests_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "interest_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_interests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_languages: {
         Row: {
           created_at: string
@@ -302,6 +495,15 @@ export type Database = {
         Args: { required: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
       }
+      set_my_category_interests: {
+        Args: {
+          choices: Json
+          details: Json
+          p_category_id: number
+          visibility: Json
+        }
+        Returns: undefined
+      }
       set_my_languages: {
         Args: { langs: Json; multilingual: boolean }
         Returns: undefined
@@ -315,10 +517,12 @@ export type Database = {
       conversation_depth: "deep" | "light" | "both"
       gender: "woman" | "man" | "non_binary" | "other"
       group_size_pref: "one_on_one" | "small_group" | "large_group" | "any"
+      interest_visibility: "public" | "matching_only" | "private"
       language_proficiency: "native" | "fluent" | "conversational" | "learning"
       message_frequency: "often" | "daily" | "relaxed"
       planning_style: "spontaneous" | "organised" | "mix"
       social_energy: "introvert" | "ambivert" | "extrovert"
+      subcategory_kind: "multi" | "single" | "text"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -453,10 +657,12 @@ export const Constants = {
       conversation_depth: ["deep", "light", "both"],
       gender: ["woman", "man", "non_binary", "other"],
       group_size_pref: ["one_on_one", "small_group", "large_group", "any"],
+      interest_visibility: ["public", "matching_only", "private"],
       language_proficiency: ["native", "fluent", "conversational", "learning"],
       message_frequency: ["often", "daily", "relaxed"],
       planning_style: ["spontaneous", "organised", "mix"],
       social_energy: ["introvert", "ambivert", "extrovert"],
+      subcategory_kind: ["multi", "single", "text"],
     },
   },
 } as const

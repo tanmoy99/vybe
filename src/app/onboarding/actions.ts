@@ -139,5 +139,5 @@ export async function saveEnergyAction(_prev: FormState, formData: FormData): Pr
         : SAVE_FAILED.message,
     };
   }
-  redirect("/universe");
+  redirect("/me/interests");
 }

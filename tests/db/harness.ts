@@ -12,6 +12,7 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { PGlite, type Transaction } from "@electric-sql/pglite";
 import { citext } from "@electric-sql/pglite/contrib/citext";
+import { postgis } from "@electric-sql/pglite-postgis";
 
 const SHIM = `
   create role anon nologin;
@@ -37,7 +38,7 @@ const SHIM = `
 `;
 
 export async function createDb() {
-  const db = await PGlite.create({ extensions: { citext } });
+  const db = await PGlite.create({ extensions: { citext, postgis } });
   await db.exec(SHIM);
   const dir = path.join(process.cwd(), "supabase", "migrations");
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".sql")).sort()) {
@@ -77,4 +78,22 @@ export async function as<T>(
     await tx.exec(`set local role ${role}`);
     return fn(tx);
   });
+}
+
+/** Look up an interest option id by category/subcategory/option slug. */
+export async function optionId(db: Db, category: string, subcategory: string, option: string) {
+  const { rows } = await db.query<{ id: number }>(
+    `select o.id from public.interest_options o
+       join public.interest_subcategories s on s.id = o.subcategory_id
+       join public.interest_categories c on c.id = s.category_id
+      where c.slug = $1 and s.slug = $2 and o.slug = $3`,
+    [category, subcategory, option],
+  );
+  if (!rows[0]) throw new Error(`No option ${category}/${subcategory}/${option}`);
+  return rows[0].id;
+}
+
+export async function categoryId(db: Db, slug: string) {
+  const { rows } = await db.query<{ id: number }>("select id from public.interest_categories where slug = $1", [slug]);
+  return rows[0].id;
 }

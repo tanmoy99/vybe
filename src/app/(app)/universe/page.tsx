@@ -95,8 +95,10 @@ async function Universe() {
             <li className="flex gap-3">
               <Circle className="mt-0.5 size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
               <span className="text-muted-foreground">
-                <strong className="font-medium text-foreground">VYBE DNA interests</strong> such as cinema, music, road trips
-                and food. This is the next part of the beta we&apos;re building.
+                <Link href="/me/interests" className="font-medium text-violet underline-offset-4 hover:underline">
+                  Build your VYBE DNA
+                </Link>{" "}
+                with the cinema, music, road trips and food you love.
               </span>
             </li>
             <li className="flex gap-3">

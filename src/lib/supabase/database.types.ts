@@ -1,180 +1,462 @@
-// Shape-compatible with `supabase gen types typescript`. Hand-written for Phase 1
-// because no database was reachable when it was authored. Regenerate with
-// `npm run db:types` once a Supabase project (or `supabase start`) is available.
-
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13";
-  };
+    PostgrestVersion: "14.18"
+  }
   public: {
     Tables: {
       audit_logs: {
         Row: {
-          action: string;
-          actor_id: string | null;
-          created_at: string;
-          id: number;
-          metadata: Json;
-          target_id: string | null;
-          target_type: string | null;
-        };
-        Insert: never;
-        Update: never;
-        Relationships: [];
-      };
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: number
+          metadata: Json
+          target_id: string | null
+          target_type: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: never
+          metadata?: Json
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: never
+          metadata?: Json
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Relationships: []
+      }
       languages: {
         Row: {
-          code: string;
-          is_active: boolean;
-          name: string;
-          native_name: string | null;
-          sort_order: number;
-        };
-        Insert: never;
-        Update: never;
-        Relationships: [];
-      };
+          code: string
+          is_active: boolean
+          name: string
+          native_name: string | null
+          sort_order: number
+        }
+        Insert: {
+          code: string
+          is_active?: boolean
+          name: string
+          native_name?: string | null
+          sort_order?: number
+        }
+        Update: {
+          code?: string
+          is_active?: boolean
+          name?: string
+          native_name?: string | null
+          sort_order?: number
+        }
+        Relationships: []
+      }
       profile_preferences: {
         Row: {
-          age_max: number;
-          age_min: number;
-          chronotype: Database["public"]["Enums"]["chronotype"] | null;
-          conversation_depth: Database["public"]["Enums"]["conversation_depth"] | null;
-          dating_genders: Database["public"]["Enums"]["gender"][];
-          group_size: Database["public"]["Enums"]["group_size_pref"] | null;
-          intent: Database["public"]["Enums"]["connection_intent"] | null;
-          message_frequency: Database["public"]["Enums"]["message_frequency"] | null;
-          multilingual_ok: boolean;
-          planning_style: Database["public"]["Enums"]["planning_style"] | null;
-          social_energy: Database["public"]["Enums"]["social_energy"] | null;
-          updated_at: string;
-          user_id: string;
-        };
-        Insert: never;
-        Update: {
-          age_max?: number;
-          age_min?: number;
-          chronotype?: Database["public"]["Enums"]["chronotype"] | null;
-          conversation_depth?: Database["public"]["Enums"]["conversation_depth"] | null;
-          dating_genders?: Database["public"]["Enums"]["gender"][];
-          group_size?: Database["public"]["Enums"]["group_size_pref"] | null;
-          intent?: Database["public"]["Enums"]["connection_intent"] | null;
-          message_frequency?: Database["public"]["Enums"]["message_frequency"] | null;
-          multilingual_ok?: boolean;
-          planning_style?: Database["public"]["Enums"]["planning_style"] | null;
-          social_energy?: Database["public"]["Enums"]["social_energy"] | null;
-        };
-        Relationships: [];
-      };
-      profiles: {
-        Row: {
-          account_status: Database["public"]["Enums"]["account_status"];
-          adult_attested_at: string;
-          created_at: string;
-          date_of_birth: string;
-          gender: Database["public"]["Enums"]["gender"] | null;
-          gender_self_description: string | null;
-          id: string;
-          nickname: string | null;
-          onboarding_completed_at: string | null;
-          onboarding_step: number;
-          terms_accepted_at: string;
-          updated_at: string;
-        };
-        Insert: never;
-        Update: {
-          gender?: Database["public"]["Enums"]["gender"] | null;
-          gender_self_description?: string | null;
-          nickname?: string | null;
-          onboarding_step?: number;
-        };
-        Relationships: [];
-      };
-      user_languages: {
-        Row: {
-          created_at: string;
-          language_code: string;
-          prefers_chatting: boolean;
-          proficiency: Database["public"]["Enums"]["language_proficiency"];
-          user_id: string;
-        };
+          age_max: number
+          age_min: number
+          chronotype: Database["public"]["Enums"]["chronotype"] | null
+          conversation_depth:
+            | Database["public"]["Enums"]["conversation_depth"]
+            | null
+          dating_genders: Database["public"]["Enums"]["gender"][]
+          group_size: Database["public"]["Enums"]["group_size_pref"] | null
+          intent: Database["public"]["Enums"]["connection_intent"] | null
+          message_frequency:
+            | Database["public"]["Enums"]["message_frequency"]
+            | null
+          multilingual_ok: boolean
+          planning_style: Database["public"]["Enums"]["planning_style"] | null
+          social_energy: Database["public"]["Enums"]["social_energy"] | null
+          updated_at: string
+          user_id: string
+        }
         Insert: {
-          created_at?: string;
-          language_code: string;
-          prefers_chatting?: boolean;
-          proficiency: Database["public"]["Enums"]["language_proficiency"];
-          user_id: string;
-        };
+          age_max?: number
+          age_min?: number
+          chronotype?: Database["public"]["Enums"]["chronotype"] | null
+          conversation_depth?:
+            | Database["public"]["Enums"]["conversation_depth"]
+            | null
+          dating_genders?: Database["public"]["Enums"]["gender"][]
+          group_size?: Database["public"]["Enums"]["group_size_pref"] | null
+          intent?: Database["public"]["Enums"]["connection_intent"] | null
+          message_frequency?:
+            | Database["public"]["Enums"]["message_frequency"]
+            | null
+          multilingual_ok?: boolean
+          planning_style?: Database["public"]["Enums"]["planning_style"] | null
+          social_energy?: Database["public"]["Enums"]["social_energy"] | null
+          updated_at?: string
+          user_id: string
+        }
         Update: {
-          language_code?: string;
-          prefers_chatting?: boolean;
-          proficiency?: Database["public"]["Enums"]["language_proficiency"];
-        };
+          age_max?: number
+          age_min?: number
+          chronotype?: Database["public"]["Enums"]["chronotype"] | null
+          conversation_depth?:
+            | Database["public"]["Enums"]["conversation_depth"]
+            | null
+          dating_genders?: Database["public"]["Enums"]["gender"][]
+          group_size?: Database["public"]["Enums"]["group_size_pref"] | null
+          intent?: Database["public"]["Enums"]["connection_intent"] | null
+          message_frequency?:
+            | Database["public"]["Enums"]["message_frequency"]
+            | null
+          multilingual_ok?: boolean
+          planning_style?: Database["public"]["Enums"]["planning_style"] | null
+          social_energy?: Database["public"]["Enums"]["social_energy"] | null
+          updated_at?: string
+          user_id?: string
+        }
         Relationships: [
           {
-            foreignKeyName: "user_languages_language_code_fkey";
-            columns: ["language_code"];
-            isOneToOne: false;
-            referencedRelation: "languages";
-            referencedColumns: ["code"];
+            foreignKeyName: "profile_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
-        ];
-      };
+        ]
+      }
+      profiles: {
+        Row: {
+          account_status: Database["public"]["Enums"]["account_status"]
+          adult_attested_at: string
+          created_at: string
+          date_of_birth: string
+          gender: Database["public"]["Enums"]["gender"] | null
+          gender_self_description: string | null
+          id: string
+          nickname: string | null
+          onboarding_completed_at: string | null
+          onboarding_step: number
+          terms_accepted_at: string
+          updated_at: string
+        }
+        Insert: {
+          account_status?: Database["public"]["Enums"]["account_status"]
+          adult_attested_at: string
+          created_at?: string
+          date_of_birth: string
+          gender?: Database["public"]["Enums"]["gender"] | null
+          gender_self_description?: string | null
+          id: string
+          nickname?: string | null
+          onboarding_completed_at?: string | null
+          onboarding_step?: number
+          terms_accepted_at: string
+          updated_at?: string
+        }
+        Update: {
+          account_status?: Database["public"]["Enums"]["account_status"]
+          adult_attested_at?: string
+          created_at?: string
+          date_of_birth?: string
+          gender?: Database["public"]["Enums"]["gender"] | null
+          gender_self_description?: string | null
+          id?: string
+          nickname?: string | null
+          onboarding_completed_at?: string | null
+          onboarding_step?: number
+          terms_accepted_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_languages: {
+        Row: {
+          created_at: string
+          language_code: string
+          prefers_chatting: boolean
+          proficiency: Database["public"]["Enums"]["language_proficiency"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          language_code: string
+          prefers_chatting?: boolean
+          proficiency: Database["public"]["Enums"]["language_proficiency"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          language_code?: string
+          prefers_chatting?: boolean
+          proficiency?: Database["public"]["Enums"]["language_proficiency"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_languages_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "languages"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "user_languages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_privacy_settings: {
         Row: {
-          discoverable: boolean;
-          discovery_paused: boolean;
-          hide_from_local: boolean;
-          show_area_label: boolean;
-          updated_at: string;
-          user_id: string;
-        };
-        Insert: never;
+          discoverable: boolean
+          discovery_paused: boolean
+          hide_from_local: boolean
+          show_area_label: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          discoverable?: boolean
+          discovery_paused?: boolean
+          hide_from_local?: boolean
+          show_area_label?: boolean
+          updated_at?: string
+          user_id: string
+        }
         Update: {
-          discoverable?: boolean;
-          discovery_paused?: boolean;
-          hide_from_local?: boolean;
-          show_area_label?: boolean;
-        };
-        Relationships: [];
-      };
+          discoverable?: boolean
+          discovery_paused?: boolean
+          hide_from_local?: boolean
+          show_area_label?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_privacy_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
-          granted_at: string;
-          granted_by: string | null;
-          role: Database["public"]["Enums"]["app_role"];
-          user_id: string;
-        };
-        Insert: never;
-        Update: never;
-        Relationships: [];
-      };
-    };
-    Views: { [_ in never]: never };
+          granted_at: string
+          granted_by: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_granted_by_fkey"
+            columns: ["granted_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
-      complete_onboarding: { Args: never; Returns: string };
-      has_role: { Args: { required: Database["public"]["Enums"]["app_role"] }; Returns: boolean };
-      set_my_languages: { Args: { langs: Json; multilingual: boolean }; Returns: undefined };
-    };
+      age_in_years: { Args: { dob: string }; Returns: number }
+      complete_onboarding: { Args: never; Returns: string }
+      has_role: {
+        Args: { required: Database["public"]["Enums"]["app_role"] }
+        Returns: boolean
+      }
+      set_my_languages: {
+        Args: { langs: Json; multilingual: boolean }
+        Returns: undefined
+      }
+    }
     Enums: {
-      account_status: "active" | "suspended" | "banned";
-      app_role: "admin" | "moderator";
-      chronotype: "morning" | "night" | "flexible";
-      connection_intent: "dating" | "friendship" | "both" | "communities";
-      conversation_depth: "deep" | "light" | "both";
-      gender: "woman" | "man" | "non_binary" | "other";
-      group_size_pref: "one_on_one" | "small_group" | "large_group" | "any";
-      language_proficiency: "native" | "fluent" | "conversational" | "learning";
-      message_frequency: "often" | "daily" | "relaxed";
-      planning_style: "spontaneous" | "organised" | "mix";
-      social_energy: "introvert" | "ambivert" | "extrovert";
-    };
-    CompositeTypes: { [_ in never]: never };
-  };
-};
+      account_status: "active" | "suspended" | "banned"
+      app_role: "admin" | "moderator"
+      chronotype: "morning" | "night" | "flexible"
+      connection_intent: "dating" | "friendship" | "both" | "communities"
+      conversation_depth: "deep" | "light" | "both"
+      gender: "woman" | "man" | "non_binary" | "other"
+      group_size_pref: "one_on_one" | "small_group" | "large_group" | "any"
+      language_proficiency: "native" | "fluent" | "conversational" | "learning"
+      message_frequency: "often" | "daily" | "relaxed"
+      planning_style: "spontaneous" | "organised" | "mix"
+      social_energy: "introvert" | "ambivert" | "extrovert"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
 
-type PublicSchema = Database["public"];
-export type Tables<T extends keyof PublicSchema["Tables"]> = PublicSchema["Tables"][T]["Row"];
-export type Enums<T extends keyof PublicSchema["Enums"]> = PublicSchema["Enums"][T];
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      account_status: ["active", "suspended", "banned"],
+      app_role: ["admin", "moderator"],
+      chronotype: ["morning", "night", "flexible"],
+      connection_intent: ["dating", "friendship", "both", "communities"],
+      conversation_depth: ["deep", "light", "both"],
+      gender: ["woman", "man", "non_binary", "other"],
+      group_size_pref: ["one_on_one", "small_group", "large_group", "any"],
+      language_proficiency: ["native", "fluent", "conversational", "learning"],
+      message_frequency: ["often", "daily", "relaxed"],
+      planning_style: ["spontaneous", "organised", "mix"],
+      social_energy: ["introvert", "ambivert", "extrovert"],
+    },
+  },
+} as const

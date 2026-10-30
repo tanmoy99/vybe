@@ -1,26 +1,165 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* VYBE is dark-first; <html> always carries .dark so shadcn's dark: variants apply. */
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Brand palette */
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-violet: var(--vybe-violet);
+  --color-indigo: var(--vybe-indigo);
+  --color-blush: var(--vybe-blush);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --animate-orbit: orbit-spin var(--orbit-duration, 90s) linear infinite;
+  --animate-orbit-reverse: orbit-spin var(--orbit-duration, 90s) linear infinite reverse;
+  --animate-pulse-soft: pulse-soft 4s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  color-scheme: dark;
+
+  --vybe-violet: #9d78f5;
+  --vybe-indigo: #6f8cff;
+  --vybe-blush: #f2a6d8;
+  --surface: #1b1830;
+  --surface-2: #25213f;
+
+  --background: #0d0b17;
+  --foreground: #f8f7ff;
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface);
+  --popover-foreground: var(--foreground);
+  --primary: var(--vybe-violet);
+  --primary-foreground: #0d0b17;
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-2);
+  --muted-foreground: #b3adcf; /* 8:1 on background */
+  --accent: #2c2650;
+  --accent-foreground: var(--foreground);
+  --destructive: #ff7b96;
+  --border: rgb(255 255 255 / 0.09);
+  --input: rgb(255 255 255 / 0.14);
+  --ring: var(--vybe-violet);
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(60rem 40rem at 50% -10%, rgb(157 120 245 / 0.14), transparent 60%),
+      radial-gradient(40rem 30rem at 100% 100%, rgb(111 140 255 / 0.07), transparent 60%);
+    background-attachment: fixed;
+  }
+  h1, h2, h3 {
+    @apply font-heading tracking-tight text-balance;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Translucent layered panel with an opaque fallback. */
+@utility glass {
+  background-color: color-mix(in oklab, var(--surface) 72%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: var(--surface);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    background-color: var(--surface);
+    backdrop-filter: none;
+  }
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(100deg, var(--vybe-violet), var(--vybe-indigo) 45%, var(--vybe-blush));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+/* Ambient motion is decoration: stop it for reduced-motion users and on low-power devices
+   (data-low-power is set by <DeviceCapabilities />). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-low-power] .ambient {
+  animation: none !important;
+}
+html[data-low-power] .glass {
+  backdrop-filter: none;
+  background-color: var(--surface);
 }
